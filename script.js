@@ -77,7 +77,7 @@ function judge(cook){
 
 // ===== 빚기 / 조리 / 시식 연출 =====
 const wait = ms => new Promise(r => setTimeout(r, ms));
-const STATES = ["intro","soaking","shaping","wrapping","cooking","firing","eating","done"];
+const STATES = ["intro","mixing","soaking","shaping","wrapping","cooking","firing","eating","done"];
 function phase(c){ const g = $("game"); g.classList.remove(...STATES); if(c) g.classList.add(c); }
 function isWin(cook){
   const sel = [...picked].map(i => INGREDIENTS[i]), m = sel.filter(x => x.marine).length;
@@ -148,6 +148,37 @@ function eatHTML(cook){
   return `<div class="eat" id="eat"><img src="chef.png" alt="시식하는 해병 주방장"><svg viewBox="0 0 400 260" aria-hidden="true"><ellipse cx="200" cy="215" rx="150" ry="30" fill="#fff" stroke="#3b2418" stroke-width="5"/><ellipse cx="200" cy="212" rx="115" ry="20" fill="#e6edf8"/><g class="bite"><g transform="translate(80 98) scale(.6)">${dumpling(cook)}</g></g></svg></div>`;
 }
 function movie(title, html, hint){ $("mCry").textContent = ""; $("mTitle").textContent = title; $("mstage").innerHTML = html; $("mHint").textContent = hint; }
+
+// ===== 재료 섞기 (소 만들기) =====
+function mixSVG(){
+  const sel = [...picked]; let seed = 11; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const col = i => FILL_COL[INGREDIENTS[i].name] || "#c9a86a";
+  const avg = sel.length ? "#" + [0, 1, 2].map(c => Math.round(sel.reduce((a, i) => a + parseInt(col(i).slice(1 + c * 2, 3 + c * 2), 16), 0) / sel.length).toString(16).padStart(2, "0")).join("") : "#e8d9b0";
+  let raw = "", mix = "";
+  sel.forEach((i, k) => {
+    const a = 2 * Math.PI * k / sel.length, cx = 200 + Math.cos(a) * 72, cy = 140 + Math.sin(a) * 26, ing = INGREDIENTS[i];
+    for(let j = 0; j < 12; j++) raw += `<circle cx="${(cx + (rnd() - .5) * 56).toFixed(0)}" cy="${(cy + (rnd() - .5) * 26).toFixed(0)}" r="${(4 + rnd() * 5).toFixed(1)}" fill="${col(i)}" stroke="#3b2418" stroke-opacity=".5" stroke-width="1"/>`;
+    for(let j = 0; j < 16; j++){ const t = rnd() * 6.283, d = Math.sqrt(rnd()); mix += `<circle cx="${(200 + Math.cos(t) * d * 118).toFixed(0)}" cy="${(140 + Math.sin(t) * d * 52).toFixed(0)}" r="${(2.5 + rnd() * 3.5).toFixed(1)}" fill="${col(i)}"/>`; }
+    raw += ing.img ? `<image href="${ing.img}" x="${cx - 22}" y="${cy - 22}" width="44" height="44" preserveAspectRatio="xMidYMid meet"/>` : ICONS[ing.name].replace("<svg ", `<svg x="${cx - 22}" y="${cy - 22}" width="44" height="44" `);
+  });
+  const bowl = `<ellipse cx="200" cy="270" rx="84" ry="16" fill="#c3d0e6"/><path d="M22 125 C30 235 110 274 200 274 C290 274 370 235 378 125 Z" fill="#e6edf8" stroke="#c3d0e6" stroke-width="6"/><path d="M62 192 C115 240 285 240 338 192" fill="none" stroke="#cdd8ea" stroke-width="5"/><ellipse cx="200" cy="125" rx="180" ry="100" fill="#f7f9fd" stroke="#c3d0e6" stroke-width="6"/><ellipse cx="200" cy="130" rx="156" ry="82" fill="#d9e4f5"/><ellipse cx="200" cy="140" rx="140" ry="68" fill="#e8eff9"/>`;
+  const spoon = `<g id="spoon" style="transform-origin:200px 140px;transition:transform .35s"><path d="M200 140L335 38" stroke="#b9823f" stroke-width="12" stroke-linecap="round"/><path d="M200 140L335 38" stroke="#3b2418" stroke-width="2" stroke-linecap="round" opacity=".4"/><ellipse cx="208" cy="134" rx="24" ry="13" transform="rotate(-37 208 134)" fill="#c9954d" stroke="#3b2418" stroke-width="3"/></g>`;
+  return `<button class="wrapbtn" id="mixbtn" type="button" aria-label="재료 섞기"><svg viewBox="0 0 400 300">${bowl}<ellipse id="mixbase" cx="200" cy="140" rx="132" ry="60" fill="${avg}" stroke="#3b2418" stroke-opacity=".35" stroke-width="2" opacity="0"/><g id="mixl" opacity="0">${mix}<ellipse cx="156" cy="122" rx="42" ry="9" fill="#fff" opacity=".25"/></g><g id="rawl">${raw}</g>${spoon}</svg></button>`;
+}
+async function startMix(){
+  const N = 5; let n = 0;
+  phase("mixing"); movie("재료 섞기!", mixSVG(), `휘휘 저어라! (0/${N})`);
+  await new Promise(done => $("mixbtn").addEventListener("click", () => {
+    if(n >= N) return;
+    n++;
+    $("spoon").style.transform = `rotate(${n * 75}deg)`;
+    $("rawl").style.opacity = 1 - n / N; $("mixl").style.opacity = n / N; $("mixbase").style.opacity = Math.min(1, n / N * 1.4);
+    if(n < N){ $("mHint").textContent = `휘휘! 더 저어라! (${n}/${N})`; return; }
+    $("mHint").textContent = "해병만두소 완성! 오우 오우!";
+    setTimeout(done, 1100);
+  }));
+  phase("soaking");
+}
 async function startWrap(){
   const N = 6; let n = 0;
   phase("wrapping"); movie("만두 빚기!", wrapSVG(), `만두피를 콕콕 눌러서 빚어라! (0/${N})`);
@@ -175,8 +206,24 @@ async function startFire(cook){
   if(win) $("mCry").textContent = "그때 황근출 해병님이 3살짜리 아쎄이 처럼 울기 시작했다!";
   await wait(win ? 3200 : 1400); judge(cook);
 }
-$("start").addEventListener("click", () => $("game").classList.remove("intro"));
-$("go").addEventListener("click", () => phase("soaking"));
+const TALK = [
+  {img:"chef.png",    alt:"배고픈 해병 주방장", msg:"기합차게 배고프군", rev:false},
+  {img:"recruit.svg", alt:"신병 해병",         msg:"아쎼이 해병 만두를 만들어보겠습니다!", rev:true}
+];
+let talkI = 0;
+function showTalk(){
+  const t = TALK[talkI];
+  $("talkImg").src = t.img; $("talkImg").alt = t.alt;
+  $("talkMsg").textContent = t.msg;
+  $("talkScene").classList.toggle("rev", t.rev);
+  $("talkNext").textContent = talkI < TALK.length - 1 ? "다음 ▶" : "조리 시작!";
+}
+$("start").addEventListener("click", () => { talkI = 0; showTalk(); $("game").classList.remove("intro"); $("game").classList.add("talk"); });
+$("talkNext").addEventListener("click", () => { if(++talkI < TALK.length) showTalk(); else $("game").classList.remove("talk"); });
+const skipTalk = () => $("game").classList.remove("talk");
+$("talkSkip").addEventListener("click", skipTalk);
+document.addEventListener("keydown", e => { if(e.key === "Escape" && $("game").classList.contains("talk")) skipTalk(); });
+$("go").addEventListener("click", startMix);
 document.querySelectorAll("[data-soak]").forEach(b => b.addEventListener("click", () => { soak = b.dataset.soak; buildShapes(); phase("shaping"); }));
 document.querySelectorAll("#cookscreen .cookbtn").forEach(b => b.addEventListener("click", () => startFire(b.dataset.cook)));
 $("again").addEventListener("click", () => {
