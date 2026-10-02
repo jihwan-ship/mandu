@@ -13,12 +13,12 @@ const INGREDIENTS = [
   {name:"대파",     icon:"🌿", good:true},
   {name:"고추장",   icon:"🟥", good:false},
   {name:"마요네즈", icon:"🥫", good:false},
-  {name:"해병짜장", img:"haebyeong-jajang.png", marine:true},
+  {name:"해병짜장", img:"haebyeong-jajang.png", marine:true, plain:true},
   {name:"해병 전우애", icon:"🫂", marine:true},
-  {name:"한재민 해병님", img:"chef.png", marine:true},
+  {name:"한재민 해병님", img:"chef-icon.png", marine:true, plain:true},
   {name:"해병 핫도그", img:"haebyeong-hotdog.png", marine:true, plain:true},
-  {name:"해병 수육", img:"haebyeong-suyuk.png", marine:true},
-  {name:"해병 햄버거", img:"haebyeong-burger.png", marine:true},
+  {name:"해병 수육", img:"haebyeong-suyuk.png", marine:true, plain:true},
+  {name:"해병 햄버거", img:"haebyeong-burger.png", marine:true, plain:true},
   {name:"해병 통조림", img:"haebyeong-can.png", marine:true, plain:true}
 ];
 const MARINE_TOTAL = INGREDIENTS.filter(i => i.marine).length;
@@ -147,7 +147,7 @@ const FIRE = {
 function eatHTML(cook){
   return `<div class="eat" id="eat"><img src="chef.png" alt="시식하는 해병 주방장"><svg viewBox="0 0 400 260" aria-hidden="true"><ellipse cx="200" cy="215" rx="150" ry="30" fill="#fff" stroke="#3b2418" stroke-width="5"/><ellipse cx="200" cy="212" rx="115" ry="20" fill="#e6edf8"/><g class="bite"><g transform="translate(80 98) scale(.6)">${dumpling(cook)}</g></g></svg></div>`;
 }
-function movie(title, html, hint){ $("mTitle").textContent = title; $("mstage").innerHTML = html; $("mHint").textContent = hint; }
+function movie(title, html, hint){ $("mCry").textContent = ""; $("mTitle").textContent = title; $("mstage").innerHTML = html; $("mHint").textContent = hint; }
 async function startWrap(){
   const N = 6; let n = 0;
   phase("wrapping"); movie("만두 빚기!", wrapSVG(), `만두피를 콕콕 눌러서 빚어라! (0/${N})`);
@@ -172,7 +172,8 @@ async function startFire(cook){
   await wait(1000); $("mHint").textContent = "냠냠…";
   await wait(2100); $("eat").classList.add(win ? "happy" : "cough");
   $("mHint").textContent = win ? "따흐흑...따흐흐흑 ㅠㅠ" : "새애끼...기열!";
-  await wait(1400); judge(cook);
+  if(win) $("mCry").textContent = "그때 황근출 해병님이 3살짜리 아쎄이 처럼 울기 시작했다!";
+  await wait(win ? 3200 : 1400); judge(cook);
 }
 $("start").addEventListener("click", () => $("game").classList.remove("intro"));
 $("go").addEventListener("click", () => phase("soaking"));
