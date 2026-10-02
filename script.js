@@ -16,7 +16,7 @@ const INGREDIENTS = [
   {name:"해병짜장", img:"haebyeong-jajang.png", marine:true},
   {name:"해병 전우애", icon:"🫂", marine:true},
   {name:"한재민 해병님", img:"chef.png", marine:true},
-  {name:"해병 밀크쉐이크", img:"haebyeong-milkshake.png", marine:true},
+  {name:"해병 핫도그", img:"haebyeong-hotdog.png", marine:true, plain:true},
   {name:"해병 수육", img:"haebyeong-suyuk.png", marine:true},
   {name:"해병 햄버거", img:"haebyeong-burger.png", marine:true},
   {name:"해병 통조림", img:"haebyeong-can.png", marine:true, plain:true}
@@ -110,7 +110,7 @@ function buildShapes(){
   $("shapes").innerHTML = SHAPES.map(sh => `<button class="cookbtn" data-shape="${sh}" type="button"><span><svg viewBox="60 88 280 110">${shapeSVG(sh, SKIN[soak])}</svg></span>${sh}</button>`).join("");
   $("shapes").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { shape = b.dataset.shape; startWrap(); }));
 }
-const FILL_COL = {"돼지고기":"#e4605f","두부":"#f3ecd2","양파":"#d9a0c8","양배추":"#8fd24a","계란":"#ffd36b","참기름":"#c8791c","건빵":"#e8bb74","매운 고추":"#e0301f","마늘":"#efe7cc","치즈":"#ffc82e","대파":"#4db85a","고추장":"#c93a1c","마요네즈":"#fffbea","해병짜장":"#4a2a17","해병 전우애":"#d62839","한재민 해병님":"#c98f6a","해병 밀크쉐이크":"#f6f1ea","해병 수육":"#d9625f","해병 햄버거":"#c98a3a","해병 통조림":"#b3301f"};
+const FILL_COL = {"돼지고기":"#e4605f","두부":"#f3ecd2","양파":"#d9a0c8","양배추":"#8fd24a","계란":"#ffd36b","참기름":"#c8791c","건빵":"#e8bb74","매운 고추":"#e0301f","마늘":"#efe7cc","치즈":"#ffc82e","대파":"#4db85a","고추장":"#c93a1c","마요네즈":"#fffbea","해병짜장":"#4a2a17","해병 전우애":"#d62839","한재민 해병님":"#c98f6a","해병 핫도그":"#8a5a2b","해병 수육":"#d9625f","해병 햄버거":"#c98a3a","해병 통조림":"#b3301f"};
 function fillSVG(){
   const sel = [...picked]; if(!sel.length) return "";
   let seed = 7; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
