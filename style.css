@@ -58,9 +58,9 @@ body:has(#game.intro){background:#f6f1e7}
 @media (prefers-reduced-motion:reduce){.cough img{animation:none}}
 
 /* ===== 빚기 / 조리 / 시식 연출 ===== */
-#game:is(.soaking,.shaping,.wrapping,.firing,.eating) :is(.scroll,.stage,.panel){display:none}
+#game:is(.mixing,.soaking,.shaping,.wrapping,.firing,.eating) :is(.scroll,.stage,.panel){display:none}
 .movie{display:none;grid-column:1/-1;grid-row:1/-1;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;color:#fff;text-shadow:2px 2px 0 #5b2a86}
-#game:is(.wrapping,.firing,.eating) .movie{display:flex}
+#game:is(.mixing,.wrapping,.firing,.eating) .movie{display:flex}
 .movie h2{margin:0;font-size:2rem}
 .mstage{width:min(88vw,430px)}
 .mstage svg{display:block;width:100%;height:auto;overflow:visible}
@@ -93,3 +93,16 @@ body:has(#game.intro){background:#f6f1e7}
 .cookbtn span svg{display:block;width:92px;height:auto;margin:0 auto 6px}
 
 .cry{margin:0;min-height:1.5em;max-width:min(520px,88vw);word-break:keep-all;font-family:"Black Han Sans","Jua",sans-serif;font-size:clamp(1.3rem,5vw,1.8rem);line-height:1.35;color:#fff;text-shadow:2px 2px 0 #5b2a86}
+#mixl,#rawl,#mixbase{transition:opacity .35s}
+
+/* ===== 인트로 대화 ===== */
+.talk{display:none;grid-column:1/-1;grid-row:1/-1;flex-direction:column;align-items:center;justify-content:center;gap:24px;text-align:center;min-height:92vh;font-family:"Black Han Sans","Jua",sans-serif}
+#game.talk{grid-template-columns:1fr;background:#f6f1e7}
+body:has(#game.talk){background:#f6f1e7}
+#game.talk :is(.scroll,.stage,.panel,.title){display:none}
+#game.talk .talk{display:flex}
+.talk .scene.rev{flex-direction:row-reverse}
+.talk .scene.rev .bubble::before{left:auto;right:-26px;border-right:12px solid transparent;border-left:16px solid #111}
+.talk .scene.rev .bubble::after{left:auto;right:-17px;border-right:10px solid transparent;border-left:14px solid #fff}
+.talk .skip{position:fixed;top:14px;right:14px;font:inherit;font-size:1.1rem;padding:8px 16px;border:3px solid #111;border-radius:999px;background:#fff;color:#111;cursor:pointer}
+.talk .skip:focus-visible{outline:3px solid #c01212;outline-offset:3px}
