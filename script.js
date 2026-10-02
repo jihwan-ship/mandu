@@ -235,4 +235,6 @@ $("again").addEventListener("click", () => {
   picked.clear(); render();
   document.querySelectorAll(".pick").forEach(b => b.setAttribute("aria-pressed", "false"));
   $("game").classList.remove("done");
+  $("game").classList.add("intro");
+  window.scrollTo(0,0);
 });
