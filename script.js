@@ -207,15 +207,20 @@ async function startFire(cook){
   await wait(win ? 3200 : 1400); judge(cook);
 }
 const TALK = [
-  {img:"chef.png",    alt:"배고픈 해병 주방장", msg:"기합차게 배고프군", rev:false},
-  {img:"recruit.svg", alt:"신병 해병",         msg:"아쎼이 해병 만두를 만들어보겠습니다!", rev:true}
+  {narr:true, msg:"6974년 6월 9일 황근출 해병님은 사나이 클럽 안에서.."},
+  {img:"chef.png",   alt:"배고픈 해병 주방장", msg:"기합차게 배고프군", rev:false},
+  {img:"marine.png", alt:"붉은 트레이닝복의 해병", msg:"아쎼이 해병 만두를 만들어보겠습니다!", rev:true}
 ];
 let talkI = 0;
 function showTalk(){
   const t = TALK[talkI];
-  $("talkImg").src = t.img; $("talkImg").alt = t.alt;
-  $("talkMsg").textContent = t.msg;
-  $("talkScene").classList.toggle("rev", t.rev);
+  $("talk").classList.toggle("narration", !!t.narr);
+  if(t.narr){ $("talkCap").textContent = t.msg; }
+  else{
+    $("talkImg").src = t.img; $("talkImg").alt = t.alt;
+    $("talkMsg").textContent = t.msg;
+    $("talkScene").classList.toggle("rev", !!t.rev);
+  }
   $("talkNext").textContent = talkI < TALK.length - 1 ? "다음 ▶" : "조리 시작!";
 }
 $("start").addEventListener("click", () => { talkI = 0; showTalk(); $("game").classList.remove("intro"); $("game").classList.add("talk"); });
