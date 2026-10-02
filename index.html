@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>해병만두</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="game" class="intro">
+  <section class="title" id="title">
+    <h1>해병만두</h1>
+    <p class="sub">만두속 만들기</p>
+    <div class="scene">
+      <img src="chef.png" alt="팔짱을 낀 해병 주방장">
+      <div class="bubble">기합찬 해병만두를 만드는거다</div>
+    </div>
+    <button class="start" id="start" type="button">자진입대</button>
+  </section>
+  <div class="scroll"><span>해병만두속만들기</span></div>
+  <section class="stage">
+    <div class="bowl">
+      <svg viewBox="0 0 400 300" aria-hidden="true">
+        <ellipse cx="200" cy="270" rx="84" ry="16" fill="#c3d0e6"/>
+        <path d="M22 125 C30 235 110 274 200 274 C290 274 370 235 378 125 Z" fill="#e6edf8" stroke="#c3d0e6" stroke-width="6"/>
+        <path d="M62 192 C115 240 285 240 338 192" fill="none" stroke="#cdd8ea" stroke-width="5"/>
+        <ellipse cx="200" cy="125" rx="180" ry="100" fill="#f7f9fd" stroke="#c3d0e6" stroke-width="6"/>
+        <ellipse cx="200" cy="130" rx="156" ry="82" fill="#d9e4f5"/>
+        <ellipse cx="200" cy="140" rx="140" ry="68" fill="#e8eff9"/>
+      </svg>
+      <div class="items" id="items" aria-live="polite"></div>
+    </div>
+    <p class="hint">재료를 골라 해병만두소를 만드세요</p>
+    <button class="go" id="go" aria-label="완성하기">▶</button>
+  </section>
+  <section class="panel" id="panel" aria-label="재료 목록"></section>
+  <section class="cookscreen" id="soakscreen">
+    <h2>만두피를 뭐에 불릴까?</h2>
+    <div class="cooks">
+      <button class="cookbtn" data-soak="주스" type="button"><span>🧃</span>주스</button>
+      <button class="cookbtn" data-soak="와인" type="button"><span>🍷</span>와인</button>
+      <button class="cookbtn" data-soak="물" type="button"><span>💧</span>물</button>
+    </div>
+  </section>
+  <section class="cookscreen" id="shapescreen">
+    <h2>어떤 모양으로 빚을까?</h2>
+    <div class="cooks" id="shapes"></div>
+  </section>
+  <section class="cookscreen" id="cookscreen">
+    <h2>어떻게 조리할까?</h2>
+    <div class="cooks">
+      <button class="cookbtn" data-cook="찌기" type="button"><span>♨️</span>찌기</button>
+      <button class="cookbtn" data-cook="굽기" type="button"><span>🔥</span>굽기</button>
+      <button class="cookbtn" data-cook="삶기" type="button"><span>🫕</span>삶기</button>
+    </div>
+  </section>
+  <section class="movie" id="movie">
+    <h2 id="mTitle"></h2>
+    <div class="mstage" id="mstage"></div>
+    <p class="hint" id="mHint"></p>
+  </section>
+  <section class="result" id="result">
+    <h2 id="rTitle"></h2>
+    <div class="scene" id="rScene">
+      <img src="chef.png" alt="시식하는 해병 주방장">
+      <div class="bubble" id="rMsg"></div>
+    </div>
+    <button class="again" id="again">다시 만들기</button>
+  </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
